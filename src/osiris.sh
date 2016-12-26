@@ -9,7 +9,40 @@ declare -a INCLUDES
 
 __help() {
 	cat << __END
-help
+osiris - operating system installer running include scripts
+Usage: osiris.sh [options] include...
+
+Options:
+  -c <file>         Add <file> to the config files to process.
+  -i <directory>    Add <directory> to the include paths to search.
+  -o <file>         Install to <file>; either a device or an image file.
+  -p <phase>        Add <phase> to the phases to run.
+  -s <step>         Add <step> to the steps to run; is run in all phases.
+  -y                Auto-confirm with 'YES' to start installation.
+  -h                Print this help message and exit.
+
+Options starting with -c, -i, -p or -s can be used multiple times. They are
+ processed in their given order.
+
+If existing, then the directories 'include' in the current and the script
+ directory are automatically added last to the include paths to search.
+
+If no phase is specified using -p, then the following phases are run:
+  bootstrap
+  initchroot
+  runchroot
+  donechroot
+  finish
+
+If no step is specified using -s, then the following steps are run:
+  before
+  (null)
+  after
+
+All steps are run in all phases.
+
+For bug reports, please visit:
+ <https://github.com/wrzlbrmft/osiris/issues>
 __END
 }
 
