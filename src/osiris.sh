@@ -28,11 +28,15 @@ If existing, then the directories 'include' in the current and the script
  directory are automatically added last to the include paths to search.
 
 If no phase is specified using -p, then the following phases are run:
+  inittemp
+  initoutput
   bootstrap
   initchroot
   runchroot
   donechroot
   finish
+  doneoutput
+  donetemp
 
 If no step is specified using -s, then the following steps are run:
   before
