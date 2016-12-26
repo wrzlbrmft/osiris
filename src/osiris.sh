@@ -11,6 +11,15 @@ help
 __END
 }
 
+__include() {
+	local INCLUDE="$1"
+}
+
+__run() {
+	local PHASE="$1"
+	local STEP="$2"
+}
+
 # main
 
 declare -a CONFIG_FILES
@@ -102,5 +111,35 @@ if [ -z "$@" ]; then
 	printf "fatal error: no include\n" >&2
 	exit 1
 fi
+
+if [ -d "$(pwd)/include" ]; then
+	INCLUDE_PATHS+=("$(pwd)/include")
+fi
+
+if [ -d "${SCRIPT_DIR}/include" ]; then
+	INCLUDE_PATHS+=("${SCRIPT_DIR}/include")
+fi
+
+for INCLUDE in "$@"; do
+	__include "${INCLUDE}"
+done
+
+for CONFIG_FILE in "${CONFIG_FILES[@]}"; do
+	source "${CONFIG_FILE}"
+done
+
+if [ -z "${PHASES[@]}" ]; then
+	PHASES=(bootstrap initchroot runchroot donechroot finish)
+fi
+
+if [ -z "${STEPS[@]}" ]; then
+	STEPS=(before "" after)
+fi
+
+for PHASE in "${PHASES[@]}"; do
+	for STEP in "${STEPS[@]}"; do
+		__run "${PHASE}" "${STEP}"
+	done
+done
 
 exit 0
