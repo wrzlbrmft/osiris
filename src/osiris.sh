@@ -36,7 +36,7 @@ If no phase is specified using -p, then the following phases are run:
 
 If no step is specified using -s, then the following steps are run:
   before
-  (null)
+  main
   after
 
 All steps are run in all phases.
@@ -216,7 +216,7 @@ if [ -z "${PHASES[@]}" ]; then
 fi
 
 if [ -z "${STEPS[@]}" ]; then
-	STEPS=(before "" after)
+	STEPS=(before main after)
 fi
 
 for PHASE in "${PHASES[@]}"; do
