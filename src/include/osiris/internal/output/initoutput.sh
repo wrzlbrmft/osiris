@@ -16,7 +16,10 @@ _osiris_internal_output_initoutput__init_device() {
 		exit 1
 	fi
 
-	printf "init output device\n"
+	# TODO: delete partitions in reverse order
+
+	dd if=/dev/zero of="${OUTPUT_DEVICE_FILE}" bs=1M count=1
+	partprobe
 
 	OUTPUT_TYPE="device"
 }
@@ -42,7 +45,10 @@ _osiris_internal_output_initoutput__init_image() {
 		mkdir -p "$(dirname "${OUTPUT_IMAGE_FILE}")"
 	fi
 
-	printf "init output image\n"
+	dd if=/dev/zero of="${OUTPUT_IMAGE_FILE}" bs=1M count="${OUTPUT_IMAGE_SIZE}" progress=status
+
+	OUTPUT_DEVICE_FILE="$(losetup -f)"
+	losetup -P "${OUTPUT_DEVICE_FILE}" "${OUTPUT_IMAGE_FILE}"
 
 	OUTPUT_TYPE="image"
 }
