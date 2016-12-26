@@ -1,4 +1,16 @@
 #!/usr/bin/env bash
+_osiris_utils_output__get_partition_device_files_mounted() {
+	local DEVICE_FILE="$1"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	if [ -n "${DEVICE_FILE}" ]; then
+		findmnt -ln -o SOURCE | grep "^${DEVICE_FILE}"
+	fi
+}
+
 _osiris_utils_output__get_partition_device_files() {
 	local DEVICE_FILE="$1"
 
@@ -23,7 +35,7 @@ _osiris_utils_output__init_device() {
 		exit 1
 	fi
 
-	if [ -n "$(findmnt -ln -o SOURCE | grep "^${OUTPUT_DEVICE_FILE}")" ]; then
+	if [ -n "$(_osiris_utils_output__get_partition_device_files_mounted)" ]; then
 		printf "fatal error: output device is currently mounted ('%s')\n" "${OUTPUT_DEVICE_FILE}" >&2
 		exit 1
 	fi
