@@ -6,8 +6,8 @@ _osiris_internal_output_initoutput_main() {
 	fi
 
 	if [ -b "${OUTPUT_FILE}" ]; then
-		_osiris_internal_output__init_device
+		_osiris_utils_output__init_device
 	else
-		_osiris_internal_output__init_image
+		_osiris_utils_output__init_image
 	fi
 }
