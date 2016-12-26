@@ -1,4 +1,16 @@
 #!/usr/bin/env bash
+_osiris_utils_output__get_partition_device_files() {
+	local DEVICE_FILE="$1"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	if [ -n "${DEVICE_FILE}" ]; then
+		lsblk -lnp -o NAME -x NAME "${DEVICE_FILE}" | grep "^${DEVICE_FILE}" | grep -v "^${DEVICE_FILE}$"
+	fi
+}
+
 _osiris_utils_output__init_device() {
 	OUTPUT_DEVICE_FILE="$1"
 
@@ -16,7 +28,9 @@ _osiris_utils_output__init_device() {
 		exit 1
 	fi
 
-	# TODO: delete partitions in reverse order
+	for DEVICE_FILE in "$(_osiris_utils_output__get_partition_device_files | sort -r)"; do
+		dd if=/dev/zero of="${DEVICE_FILE}" bs=1M count=1
+	done
 
 	dd if=/dev/zero of="${OUTPUT_DEVICE_FILE}" bs=1M count=1
 	partprobe
