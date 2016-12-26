@@ -88,7 +88,7 @@ __run() {
 		if [ -f "${PHASE_FILE}" ]; then
 			source "${PHASE_FILE}"
 
-			FUNCTION="$(printf "%s" "${INCLUDE}" | sed 's/\//_/g')_${PHASE}_${STEP}"
+			FUNCTION="_$(printf "%s" "${INCLUDE}" | sed 's/\//_/g')_${PHASE}_${STEP}"
 			if [ "function" == "$(type -t "${FUNCTION}")" ]; then
 				"${FUNCTION}"
 			fi
