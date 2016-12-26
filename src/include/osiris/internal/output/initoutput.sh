@@ -38,6 +38,10 @@ _osiris_internal_output_initoutput__init_image() {
 		exit 1
 	fi
 
+	if [ ! -d "$(dirname "${OUTPUT_IMAGE}")" ]; then
+		mkdir -p "$(dirname "${OUTPUT_IMAGE}")"
+	fi
+
 	printf "init output image\n"
 
 	OUTPUT_TYPE="image"
