@@ -73,6 +73,10 @@ __include() {
 			source "${INCLUDE_DIR}/include.conf"
 		fi
 
+		if [ -f "${INCLUDE_DIR}/include.lib.sh" ]; then
+			source "${INCLUDE_DIR}/include.lib.sh"
+		fi
+
 		INCLUDES+=("${INCLUDE}")
 	fi
 }
