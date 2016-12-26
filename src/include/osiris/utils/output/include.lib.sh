@@ -67,6 +67,11 @@ _osiris_utils_output__init_image() {
 		exit 1
 	fi
 
+	if [ -z "${OUTPUT_IMAGE_SIZE}" ]; then
+		printf "fatal error: no output image size\n" >&2
+		exit 1
+	fi
+
 	if [ ! -d "$(dirname "${OUTPUT_IMAGE_FILE}")" ]; then
 		mkdir -p "$(dirname "${OUTPUT_IMAGE_FILE}")"
 	fi
