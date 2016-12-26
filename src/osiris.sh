@@ -196,6 +196,10 @@ if [ -d "${SCRIPT_DIR}/include" ]; then
 	INCLUDE_PATHS+=("${SCRIPT_DIR}/include")
 fi
 
+__include "osiris/internal/temp"
+__include "osiris/internal/output"
+__include "osiris/internal/chroot"
+
 for INCLUDE in "$@"; do
 	__include "${INCLUDE}"
 done
@@ -205,7 +209,7 @@ for CONFIG_FILE in "${CONFIG_FILES[@]}"; do
 done
 
 if [ -z "${PHASES[@]}" ]; then
-	PHASES=(bootstrap initchroot runchroot donechroot finish)
+	PHASES=(inittemp initoutput bootstrap initchroot runchroot donechroot finish doneoutput donetemp)
 fi
 
 if [ -z "${STEPS[@]}" ]; then
