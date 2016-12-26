@@ -4,6 +4,8 @@ SCRIPT_FILE="${SCRIPT_DIR}/$(basename "${BASH_SOURCE[0]}")"
 SCRIPT_NAME="$(SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"; printf "%s" "${SCRIPT_NAME%.*}")"
 
 declare -a INCLUDE_PATHS
+declare -A INCLUDE_DIRS
+declare -a INCLUDES
 
 __help() {
 	cat << __END
@@ -13,6 +15,29 @@ __END
 
 __include() {
 	local INCLUDE="$1"
+
+	if [ -z "${INCLUDE_DIRS["${INCLUDE}"]}" ]; then
+		local INCLUDE_DIR
+
+		for INCLUDE_PATH in "${INCLUDE_PATHS[@]}"; do
+			if [ -d "${INCLUDE_PATH}/${INCLUDE}" ]; then
+				INCLUDE_DIR="${INCLUDE_PATH}/${INCLUDE}"
+			fi
+		done
+
+		if [ -z "${INCLUDE_DIR}" ]; then
+			printf "fatal error: include not found ('%s')\n" "${INCLUDE}" >&2
+			exit 1
+		fi
+
+		INCLUDE_DIRS["${INCLUDE}"]="${INCLUDE_DIR}"
+
+		if [ -f "${INCLUDE_DIR}/include.conf" ]; then
+			source "${INCLUDE_DIR}/include.conf"
+		fi
+
+		INCLUDES+=("${INCLUDE}")
+	fi
 }
 
 __run() {
