@@ -3,8 +3,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT_FILE="${SCRIPT_DIR}/$(basename "${BASH_SOURCE[0]}")"
 SCRIPT_NAME="$(SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"; printf "%s" "${SCRIPT_NAME%.*}")"
 
-declare -a INCLUDE_PATHS
 declare -A INCLUDE_DIRS
+declare -a INCLUDE_PATHS
 declare -a INCLUDES
 
 __help() {
@@ -43,6 +43,31 @@ __include() {
 __run() {
 	local PHASE="$1"
 	local STEP="$2"
+
+	local INCLUDE_DIR
+	local PHASE_FILE
+
+	local FUNCTION
+	local FUNCTION_RUN="${PHASE}"
+	if [ -n "${STEP}" ]; then
+		FUNCTION_RUN="${FUNCTION_RUN}_${STEP}"
+	fi
+
+	for INCLUDE in "${INCLUDES[@]}"; do
+		INCLUDE_DIR="${INCLUDE_DIRS["${INCLUDE}"]}"
+		PHASE_FILE="${INCLUDE_DIR}/${PHASE}.sh"
+
+		if [ -f "${PHASE_FILE}" ]; then
+			FUNCTION="$(printf "%s" "${INCLUDE}" | sed 's/\//_/g')"
+			FUNCTION="_${FUNCTION}_${FUNCTION_RUN}"
+
+			source "${PHASE_FILE}"
+
+			if [ "function" == "$(type -t "${FUNCTION}")" ]; then
+				"${FUNCTION}"
+			fi
+		fi
+	done
 }
 
 # main
