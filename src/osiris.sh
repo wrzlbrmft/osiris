@@ -79,23 +79,16 @@ __run() {
 
 	local INCLUDE_DIR
 	local PHASE_FILE
-
 	local FUNCTION
-	local FUNCTION_RUN="${PHASE}"
-	if [ -n "${STEP}" ]; then
-		FUNCTION_RUN="${FUNCTION_RUN}_${STEP}"
-	fi
 
 	for INCLUDE in "${INCLUDES[@]}"; do
 		INCLUDE_DIR="${INCLUDE_DIRS["${INCLUDE}"]}"
 		PHASE_FILE="${INCLUDE_DIR}/${PHASE}.sh"
 
 		if [ -f "${PHASE_FILE}" ]; then
-			FUNCTION="$(printf "%s" "${INCLUDE}" | sed 's/\//_/g')"
-			FUNCTION="_${FUNCTION}_${FUNCTION_RUN}"
-
 			source "${PHASE_FILE}"
 
+			FUNCTION="$(printf "%s" "${INCLUDE}" | sed 's/\//_/g')_${PHASE}_${STEP}"
 			if [ "function" == "$(type -t "${FUNCTION}")" ]; then
 				"${FUNCTION}"
 			fi
