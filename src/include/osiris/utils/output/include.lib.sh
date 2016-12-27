@@ -99,6 +99,41 @@ _osiris_utils_output__create_partition_table() {
 	fi
 }
 
+_osiris_utils_output__create_partition() {
+	local PARTITION_TYPE="$1"
+	local PARTITION_SIZE="$2"
+	local PARTITION_UNIT="$3"
+	local DEVICE_FILE="$4"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	if [ -n "${DEVICE_FILE}" ] && [ -n "${PARTITION_TYPE}" ] && [ "-1" != "${OUTPUT_PARTITION_START}" ]; then
+		if [ -n "${PARTITION_UNIT}" ]; then
+			OUTPUT_PARTITION_UNIT="${PARTITION_UNIT}"
+		fi
+
+		local PARTITION_START="${OUTPUT_PARTITION_START}${OUTPUT_PARTITION_UNIT}"
+
+		if [ -n "${PARTITION_SIZE}" ]; then
+			if [ "1" == "${OUTPUT_PARTITION_START}" ]; then
+				OUTPUT_PARTITION_START="${PARTITION_SIZE}"
+			else
+				OUTPUT_PARTITION_START="$((OUTPUT_PARTITION_START+PARTITION_SIZE))"
+			fi
+			local PARTITION_END="${OUTPUT_PARTITION_START}${OUTPUT_PARTITION_UNIT}"
+		else
+			OUTPUT_PARTITION_START="-1"
+			local PARTITION_END="100%"
+		fi
+
+		parted -a optimal "${DEVICE_FILE}" mkpart primary "${PARTITION_TYPE}" "${PARTITION_START}" "${PARTITION_END}"
+
+		partprobe
+	fi
+}
+
 _osiris_utils_output__create_image() {
 	local IMAGE_FILE="$1"
 	local IMAGE_SIZE="$2"
