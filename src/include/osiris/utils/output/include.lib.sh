@@ -84,6 +84,21 @@ _osiris_utils_output__delete_partition_table() {
 	fi
 }
 
+_osiris_utils_output__create_partition_table() {
+	local DEVICE_FILE="$1"
+	local PARTITION_TYPE="$2"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	if [ -n "${DEVICE_FILE}" ] && [ -n "${PARTITION_TYPE}" ]; then
+		parted -a optimal "${DEVICE_FILE}" mklabel "${PARTITION_TYPE}"
+
+		partprobe
+	fi
+}
+
 _osiris_utils_output__create_image() {
 	local IMAGE_FILE="$1"
 	local IMAGE_SIZE="$2"
