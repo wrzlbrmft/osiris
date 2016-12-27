@@ -23,6 +23,84 @@ _osiris_utils_output__get_partition_device_files() {
 	fi
 }
 
+_osiris_utils_output__create_file_path() {
+	local FILE="$1"
+
+	if [ -n "${FILE}" ]; then
+		if [ ! -d "$(dirname "${FILE}")" ]; then
+			mkdir -p "$(dirname "${FILE}")"
+		fi
+	fi
+}
+
+_osiris_utils_output__reset_file() {
+	local FILE="$1"
+	local SIZE="$2"
+
+	if [ -z "${SIZE}" ]; then
+		SIZE="1"
+	fi
+
+	if [ -n "${FILE}" ]; then
+		_osiris_utils_output__create_file_path "${FILE}"
+
+		dd if=/dev/zero of="${FILE}" bs=1M count="${SIZE}" progress=status
+	fi
+}
+
+_osiris_utils_output__delete_partition() {
+	local DEVICE_FILE="$1"
+
+	if [ -n "${DEVICE_FILE}" ]; then
+		_osiris_utils_output__reset_file "${DEVICE_FILE}"
+	fi
+}
+
+_osiris_utils_output__delete_all_partitions() {
+	local DEVICE_FILE="$1"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	if [ -n "${DEVICE_FILE}" ]; then
+		for PARTITION_DEVICE_FILE in "$(_osiris_utils_output__get_partition_device_files "${DEVICE_FILE}" | sort -r)"; do
+			_osiris_utils_output__delete_partition "${PARTITION_DEVICE_FILE}"
+		done
+
+		partprobe
+	fi
+}
+
+_osiris_utils_output__delete_partition_table() {
+	local DEVICE_FILE="$1"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	if [ -n "${DEVICE_FILE}" ]; then
+		_osiris_utils_output__reset_file "${DEVICE_FILE}"
+	fi
+}
+
+_osiris_utils_output__create_image() {
+	local IMAGE_FILE="$1"
+	local IMAGE_SIZE="$2"
+
+	if [ -z "${IMAGE_FILE}" ]; then
+		IMAGE_FILE="${OUTPUT_IMAGE_FILE}"
+	fi
+
+	if [ -z "${IMAGE_SIZE}" ]; then
+		IMAGE_SIZE="${OUTPUT_IMAGE_SIZE}"
+	fi
+
+	if [ -n "${IMAGE_FILE}" ] && [ -n "${IMAGE_SIZE}" ]; then
+		_osiris_utils_output__reset_file "${IMAGE_FILE}" "${IMAGE_SIZE}"
+	fi
+}
+
 _osiris_utils_output__init_device() {
 	OUTPUT_DEVICE_FILE="$1"
 
@@ -35,17 +113,13 @@ _osiris_utils_output__init_device() {
 		exit 1
 	fi
 
-	if [ -n "$(_osiris_utils_output__get_partition_device_files_mounted)" ]; then
+	if [ -n "$(_osiris_utils_output__get_partition_device_files_mounted "${OUTPUT_DEVICE_FILE}")" ]; then
 		printf "fatal error: output device is currently mounted ('%s')\n" "${OUTPUT_DEVICE_FILE}" >&2
 		exit 1
 	fi
 
-	for DEVICE_FILE in "$(_osiris_utils_output__get_partition_device_files | sort -r)"; do
-		dd if=/dev/zero of="${DEVICE_FILE}" bs=1M count=1
-	done
-
-	dd if=/dev/zero of="${OUTPUT_DEVICE_FILE}" bs=1M count=1
-	partprobe
+	_osiris_utils_output__delete_all_partitions "${OUTPUT_DEVICE_FILE}"
+	_osiris_utils_output__delete_partition_table "${OUTPUT_DEVICE_FILE}"
 
 	OUTPUT_TYPE="device"
 }
@@ -77,11 +151,7 @@ _osiris_utils_output__init_image() {
 		exit 1
 	fi
 
-	if [ ! -d "$(dirname "${OUTPUT_IMAGE_FILE}")" ]; then
-		mkdir -p "$(dirname "${OUTPUT_IMAGE_FILE}")"
-	fi
-
-	dd if=/dev/zero of="${OUTPUT_IMAGE_FILE}" bs=1M count="${OUTPUT_IMAGE_SIZE}" progress=status
+	_osiris_utils_output__create_image "${OUTPUT_IMAGE_FILE}" "${OUTPUT_IMAGE_SIZE}"
 
 	OUTPUT_DEVICE_FILE="$(losetup -f)"
 	losetup -P "${OUTPUT_DEVICE_FILE}" "${OUTPUT_IMAGE_FILE}"
