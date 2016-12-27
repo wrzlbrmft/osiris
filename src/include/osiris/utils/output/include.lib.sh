@@ -52,6 +52,7 @@ _osiris_utils_output__init_device() {
 
 _osiris_utils_output__init_image() {
 	OUTPUT_IMAGE_FILE="$1"
+	IMAGE_SIZE="$2"
 
 	if [ -z "${OUTPUT_IMAGE_FILE}" ]; then
 		OUTPUT_IMAGE_FILE="${OUTPUT_FILE}"
@@ -65,6 +66,10 @@ _osiris_utils_output__init_image() {
 	if [ -f "${OUTPUT_IMAGE_FILE}" ]; then
 		printf "fatal error: output image file already exists ('%s')\n" "${OUTPUT_IMAGE_FILE}" >&2
 		exit 1
+	fi
+
+	if [ -n "${IMAGE_SIZE}" ]; then
+		OUTPUT_IMAGE_SIZE="${IMAGE_SIZE}"
 	fi
 
 	if [ -z "${OUTPUT_IMAGE_SIZE}" ]; then
