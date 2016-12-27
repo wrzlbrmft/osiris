@@ -56,7 +56,7 @@ _osiris_utils_output__delete_partition() {
 	fi
 }
 
-_osiris_utils_output__delete_all_partitions() {
+_osiris_utils_output__delete_partitions() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -168,7 +168,7 @@ _osiris_utils_output__init_device() {
 		exit 1
 	fi
 
-	_osiris_utils_output__delete_all_partitions "${OUTPUT_DEVICE_FILE}"
+	_osiris_utils_output__delete_partitions "${OUTPUT_DEVICE_FILE}"
 	_osiris_utils_output__delete_partition_table "${OUTPUT_DEVICE_FILE}"
 
 	OUTPUT_TYPE="device"
