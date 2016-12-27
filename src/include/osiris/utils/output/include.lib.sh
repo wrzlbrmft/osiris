@@ -33,7 +33,7 @@ _osiris_utils_output__create_file_path() {
 	fi
 }
 
-_osiris_utils_output__reset_file() {
+_osiris_utils_output__create_file() {
 	local FILE="$1"
 	local SIZE="$2"
 
@@ -52,7 +52,7 @@ _osiris_utils_output__delete_partition() {
 	local DEVICE_FILE="$1"
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		_osiris_utils_output__reset_file "${DEVICE_FILE}"
+		_osiris_utils_output__create_file "${DEVICE_FILE}"
 	fi
 }
 
@@ -80,7 +80,24 @@ _osiris_utils_output__delete_partition_table() {
 	fi
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		_osiris_utils_output__reset_file "${DEVICE_FILE}"
+		_osiris_utils_output__create_file "${DEVICE_FILE}"
+	fi
+}
+
+_osiris_utils_output__create_image_file() {
+	local IMAGE_FILE="$1"
+	local IMAGE_SIZE="$2"
+
+	if [ -z "${IMAGE_FILE}" ]; then
+		IMAGE_FILE="${OUTPUT_IMAGE_FILE}"
+	fi
+
+	if [ -z "${IMAGE_SIZE}" ]; then
+		IMAGE_SIZE="${OUTPUT_IMAGE_SIZE}"
+	fi
+
+	if [ -n "${IMAGE_FILE}" ] && [ -n "${IMAGE_SIZE}" ]; then
+		_osiris_utils_output__create_file "${IMAGE_FILE}" "${IMAGE_SIZE}"
 	fi
 }
 
@@ -134,23 +151,6 @@ _osiris_utils_output__create_partition() {
 	fi
 }
 
-_osiris_utils_output__create_image() {
-	local IMAGE_FILE="$1"
-	local IMAGE_SIZE="$2"
-
-	if [ -z "${IMAGE_FILE}" ]; then
-		IMAGE_FILE="${OUTPUT_IMAGE_FILE}"
-	fi
-
-	if [ -z "${IMAGE_SIZE}" ]; then
-		IMAGE_SIZE="${OUTPUT_IMAGE_SIZE}"
-	fi
-
-	if [ -n "${IMAGE_FILE}" ] && [ -n "${IMAGE_SIZE}" ]; then
-		_osiris_utils_output__reset_file "${IMAGE_FILE}" "${IMAGE_SIZE}"
-	fi
-}
-
 _osiris_utils_output__init_device() {
 	OUTPUT_DEVICE_FILE="$1"
 
@@ -201,7 +201,7 @@ _osiris_utils_output__init_image() {
 		exit 1
 	fi
 
-	_osiris_utils_output__create_image "${OUTPUT_IMAGE_FILE}" "${OUTPUT_IMAGE_SIZE}"
+	_osiris_utils_output__create_image_file "${OUTPUT_IMAGE_FILE}" "${OUTPUT_IMAGE_SIZE}"
 
 	OUTPUT_DEVICE_FILE="$(losetup -f)"
 	losetup -P "${OUTPUT_DEVICE_FILE}" "${OUTPUT_IMAGE_FILE}"
