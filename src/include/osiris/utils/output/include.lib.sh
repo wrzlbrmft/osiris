@@ -64,7 +64,7 @@ _osiris_utils_output__delete_partitions() {
 	fi
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		for PARTITION_DEVICE_FILE in "$(_osiris_utils_output__get_partition_device_files "${DEVICE_FILE}" | sort -r)"; do
+		for PARTITION_DEVICE_FILE in $(_osiris_utils_output__get_partition_device_files "${DEVICE_FILE}" | sort -r); do
 			_osiris_utils_output__delete_partition "${PARTITION_DEVICE_FILE}"
 		done
 
