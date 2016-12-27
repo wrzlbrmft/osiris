@@ -187,5 +187,5 @@ _osiris_utils_output__done_image() {
 		exit 1
 	fi
 
-	losetup -d "${OUTPUT_IMAGE_FILE}"
+	losetup -d "${OUTPUT_DEVICE_FILE}"
 }
