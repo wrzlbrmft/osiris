@@ -17,6 +17,7 @@ Options:
   -i <directory>    Add <directory> to the include paths to search.
   -o <file>         Install to <file>; either a device or an image file.
   -p <phase>        Add <phase> to the phases to run.
+  -r                Do not check for root privileges.
   -s <step>         Add <step> to the steps to run; is run in all phases.
   -y                Auto-confirm with 'YES' to start installation.
   -h                Print this help message and exit.
@@ -110,7 +111,7 @@ declare -a CONFIG_FILES
 declare -a PHASES
 declare -a STEPS
 
-while getopts :hc:i:o:p:s:y OPT; do
+while getopts :hc:i:o:p:rs:y OPT; do
 	case "${OPT}" in
 		h)
 			__help
@@ -144,6 +145,10 @@ while getopts :hc:i:o:p:s:y OPT; do
 		p)
 			PHASE="${OPTARG}"
 			PHASES+=("${PHASE}")
+			;;
+
+		r)
+			NO_ROOT_CHECK="1"
 			;;
 
 		s)
@@ -195,6 +200,13 @@ if [ -z "$*" ]; then
 	printf "fatal error: no include\n" >&2
 	exit 1
 fi
+
+if [ -z "${NO_ROOT_CHECK}" ] && [ "root" != "${USER}" ]; then
+	printf "fatal error: no root privileges ('%s')\n" "${USER}" >&2
+	exit 1
+fi
+
+exit 0
 
 if [ -d "$(pwd)/include" ]; then
 	INCLUDE_PATHS+=("$(pwd)/include")
