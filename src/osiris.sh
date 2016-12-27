@@ -206,8 +206,6 @@ if [ -z "${NO_ROOT_CHECK}" ] && [ "root" != "${USER}" ]; then
 	exit 1
 fi
 
-exit 0
-
 if [ -d "$(pwd)/include" ]; then
 	INCLUDE_PATHS+=("$(pwd)/include")
 fi
