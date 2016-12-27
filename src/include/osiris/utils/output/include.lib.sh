@@ -214,6 +214,53 @@ _osiris_utils_output__get_last_partition_device_file() {
 	fi
 }
 
+_osiris_utils_output__update_partition_flag() {
+	local STATE="$1"
+	local PARTITION_FLAG="$2"
+	local PARTITION_NUM="$3"
+	local DEVICE_FILE="$4"
+
+	if [ -n "${STATE}" ] && [ -n "${PARTITION_FLAG}" ]; then
+		if [ -z "${DEVICE_FILE}" ]; then
+			DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+		fi
+
+		if [ -n "${DEVICE_FILE}" ]; then
+			if [ -z "${PARTITION_NUM}" ]; then
+				PARTITION_NUM="$(_osiris_utils_output__get_partition_device_files_count "${DEVICE_FILE}")"
+			fi
+
+			case "${STATE}" in
+				set)
+					parted -a optimal "${DEVICE_FILE}" set "${PARTITION_NUM}" "${PARTITION_FLAG}" on
+					;;
+
+				clear)
+					parted -a optimal "${DEVICE_FILE}" set "${PARTITION_NUM}" "${PARTITION_FLAG}" off
+					;;
+			esac
+
+			partprobe
+		fi
+	fi
+}
+
+_osiris_utils_output__set_partition_flag() {
+	local PARTITION_FLAG="$2"
+	local PARTITION_NUM="$3"
+	local DEVICE_FILE="$4"
+
+	_osiris_utils_output__update_partition_flag set "${PARTITION_FLAG}" "${PARTITION_NUM}" "${DEVICE_FILE}"
+}
+
+_osiris_utils_output__clear_partition_flag() {
+	local PARTITION_FLAG="$2"
+	local PARTITION_NUM="$3"
+	local DEVICE_FILE="$4"
+
+	_osiris_utils_output__update_partition_flag clear "${PARTITION_FLAG}" "${PARTITION_NUM}" "${DEVICE_FILE}"
+}
+
 _osiris_utils_output__init_device() {
 	OUTPUT_DEVICE_FILE="$1"
 
