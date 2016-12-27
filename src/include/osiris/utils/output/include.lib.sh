@@ -11,6 +11,20 @@ _osiris_utils_output__get_partition_device_files_mounted() {
 	fi
 }
 
+_osiris_utils_output__get_partition_device_files_mounted_count() {
+	local DEVICE_FILE="$1"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	if [ -n "${DEVICE_FILE}" ]; then
+		local PARTITION_DEVICE_FILES=($(_osiris_utils_output__get_partition_device_files_mounted "${DEVICE_FILE}"))
+
+		printf "%s" "${#PARTITION_DEVICE_FILES[@]}"
+	fi
+}
+
 _osiris_utils_output__get_partition_device_files() {
 	local DEVICE_FILE="$1"
 
@@ -20,6 +34,20 @@ _osiris_utils_output__get_partition_device_files() {
 
 	if [ -n "${DEVICE_FILE}" ]; then
 		lsblk -lnp -o NAME -x NAME "${DEVICE_FILE}" | grep "^${DEVICE_FILE}" | grep -v "^${DEVICE_FILE}$"
+	fi
+}
+
+_osiris_utils_output__get_partition_device_files_count() {
+	local DEVICE_FILE="$1"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	if [ -n "${DEVICE_FILE}" ]; then
+		local PARTITION_DEVICE_FILES=($(_osiris_utils_output__get_partition_device_files "${DEVICE_FILE}"))
+
+		printf "%s" "${#PARTITION_DEVICE_FILES[@]}"
 	fi
 }
 
@@ -189,7 +217,7 @@ _osiris_utils_output__init_device() {
 		exit 1
 	fi
 
-	if [ -n "$(_osiris_utils_output__get_partition_device_files_mounted "${OUTPUT_DEVICE_FILE}")" ]; then
+	if [ "0" != "$(_osiris_utils_output__get_partition_device_files_mounted_count "${OUTPUT_DEVICE_FILE}")" ]; then
 		printf "fatal error: output device is currently mounted ('%s')\n" "${OUTPUT_DEVICE_FILE}" >&2
 		exit 1
 	fi
