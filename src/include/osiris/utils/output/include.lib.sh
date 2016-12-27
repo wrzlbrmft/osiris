@@ -151,6 +151,32 @@ _osiris_utils_output__create_partition() {
 	fi
 }
 
+_osiris_utils_output__get_partition_device_file() {
+	local PARTITION_NUM="$1"
+	local DEVICE_FILE="$2"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	if [ -n "${PARTITION_NUM}" ] && [ -n "${DEVICE_FILE}" ]; then
+		local PARTITION_DEVICE_FILES=($(_osiris_utils_output__get_partition_device_files "${DEVICE_FILE}"))
+
+		PARTITION_NUM="$((PARTITION_NUM-1))"
+		printf "%s" "${PARTITION_DEVICE_FILES["${PARTITION_NUM}"]}"
+	fi
+}
+
+_osiris_utils_output__get_last_partition_device_file() {
+	local DEVICE_FILE="$1"
+
+	if [ -z "${DEVICE_FILE}" ]; then
+		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
+	fi
+
+	printf "%s" "$(_osiris_utils_output__get_partition_device_file 0 "${DEVICE_FILE}")"
+}
+
 _osiris_utils_output__init_device() {
 	OUTPUT_DEVICE_FILE="$1"
 
