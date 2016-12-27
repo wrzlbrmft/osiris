@@ -44,7 +44,7 @@ _osiris_utils_output__reset_file() {
 	if [ -n "${FILE}" ]; then
 		_osiris_utils_output__create_file_path "${FILE}"
 
-		dd if=/dev/zero of="${FILE}" bs=1M count="${SIZE}" progress=status
+		dd if=/dev/zero of="${FILE}" bs=1M count="${SIZE}" status=progress
 	fi
 }
 
