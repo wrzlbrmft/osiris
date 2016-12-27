@@ -261,6 +261,46 @@ _osiris_utils_output__clear_partition_flag() {
 	_osiris_utils_output__update_partition_flag clear "${PARTITION_FLAG}" "${PARTITION_NUM}" "${DEVICE_FILE}"
 }
 
+_osiris_utils_output__create_filesystem() {
+	local FILESYSTEM_TYPE="$1"
+	local FILESYSTEM_LABEL="$2"
+	local DEVICE_FILE="$3"
+
+	if [ -n "${FILESYSTEM_TYPE}" ]; then
+		if [ -z "${DEVICE_FILE}" ]; then
+			DEVICE_FILE="$(_osiris_utils_output__get_last_partition_device_file "${OUTPUT_DEVICE_FILE}")"
+		fi
+
+		if [ -n "${DEVICE_FILE}" ]; then
+			case "${FILESYSTEM_TYPE}" in
+				ext2|ext3|ext4)
+					if [ -n "${FILESYSTEM_LABEL}" ]; then
+						mkfs -t "${FILESYSTEM_TYPE}" -L "${FILESYSTEM_LABEL}" "${DEVICE_FILE}"
+					else
+						mkfs -t "${FILESYSTEM_TYPE}" "${DEVICE_FILE}"
+					fi
+					;;
+
+				swap)
+					if [ -n "${FILESYSTEM_LABEL}" ]; then
+						mkswap -L "${FILESYSTEM_LABEL}" "${DEVICE_FILE}"
+					else
+						mkswap "${DEVICE_FILE}"
+					fi
+					;;
+
+				fat32)
+					if [ -n "${FILESYSTEM_LABEL}" ]; then
+						mkfs -t fat -F 32 -n "${FILESYSTEM_LABEL}" "${DEVICE_FILE}"
+					else
+						mkfs -t fat -F 32 "${DEVICE_FILE}"
+					fi
+					;;
+			esac
+		fi
+	fi
+}
+
 _osiris_utils_output__init_device() {
 	OUTPUT_DEVICE_FILE="$1"
 
