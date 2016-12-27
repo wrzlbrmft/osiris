@@ -190,8 +190,7 @@ _osiris_utils_output__get_partition_device_file() {
 	if [ -n "${PARTITION_NUM}" ] && [ -n "${DEVICE_FILE}" ]; then
 		local PARTITION_DEVICE_FILES=($(_osiris_utils_output__get_partition_device_files "${DEVICE_FILE}"))
 
-		PARTITION_NUM="$((PARTITION_NUM-1))"
-		printf "%s" "${PARTITION_DEVICE_FILES["${PARTITION_NUM}"]}"
+		printf "%s" "${PARTITION_DEVICE_FILES["$((PARTITION_NUM-1))"]}"
 	fi
 }
 
