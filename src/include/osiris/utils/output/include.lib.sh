@@ -85,15 +85,15 @@ _osiris_utils_output__delete_partition_table() {
 }
 
 _osiris_utils_output__create_partition_table() {
-	local PARTITION_TYPE="$1"
+	local PARTITION_TABLE_TYPE="$1"
 	local DEVICE_FILE="$2"
 
 	if [ -z "${DEVICE_FILE}" ]; then
 		DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
 	fi
 
-	if [ -n "${PARTITION_TYPE}" ] && [ -n "${DEVICE_FILE}" ]; then
-		parted -a optimal "${DEVICE_FILE}" mklabel "${PARTITION_TYPE}"
+	if [ -n "${PARTITION_TABLE_TYPE}" ] && [ -n "${DEVICE_FILE}" ]; then
+		parted -a optimal "${DEVICE_FILE}" mklabel "${PARTITION_TABLE_TYPE}"
 
 		partprobe
 	fi
