@@ -52,7 +52,7 @@ _osiris_utils_output__init_device() {
 
 _osiris_utils_output__init_image() {
 	OUTPUT_IMAGE_FILE="$1"
-	IMAGE_SIZE="$2"
+	local IMAGE_SIZE="$2"
 
 	if [ -z "${OUTPUT_IMAGE_FILE}" ]; then
 		OUTPUT_IMAGE_FILE="${OUTPUT_FILE}"
