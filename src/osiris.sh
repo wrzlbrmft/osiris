@@ -189,9 +189,9 @@ while getopts :hc:i:o:p:s:y OPT; do
 			;;
 	esac
 done
-shift $((OPTIND-1))
+shift "$((OPTIND-1))"
 
-if [ -z "$@" ]; then
+if [ -z "$*" ]; then
 	printf "fatal error: no include\n" >&2
 	exit 1
 fi
