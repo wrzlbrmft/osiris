@@ -246,17 +246,17 @@ _osiris_utils_output__update_partition_flag() {
 }
 
 _osiris_utils_output__set_partition_flag() {
-	local PARTITION_FLAG="$2"
-	local PARTITION_NUM="$3"
-	local DEVICE_FILE="$4"
+	local PARTITION_FLAG="$1"
+	local PARTITION_NUM="$2"
+	local DEVICE_FILE="$3"
 
 	_osiris_utils_output__update_partition_flag set "${PARTITION_FLAG}" "${PARTITION_NUM}" "${DEVICE_FILE}"
 }
 
 _osiris_utils_output__clear_partition_flag() {
-	local PARTITION_FLAG="$2"
-	local PARTITION_NUM="$3"
-	local DEVICE_FILE="$4"
+	local PARTITION_FLAG="$1"
+	local PARTITION_NUM="$2"
+	local DEVICE_FILE="$3"
 
 	_osiris_utils_output__update_partition_flag clear "${PARTITION_FLAG}" "${PARTITION_NUM}" "${DEVICE_FILE}"
 }
