@@ -202,7 +202,7 @@ _osiris_utils_output__get_partition_device_file() {
 	fi
 }
 
-_osiris_utils_output__get_last_partition_device_file() {
+_osiris_utils_output__get_partition_device_file_last() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -268,7 +268,7 @@ _osiris_utils_output__create_filesystem() {
 
 	if [ -n "${FILESYSTEM_TYPE}" ]; then
 		if [ -z "${DEVICE_FILE}" ]; then
-			DEVICE_FILE="$(_osiris_utils_output__get_last_partition_device_file "${OUTPUT_DEVICE_FILE}")"
+			DEVICE_FILE="$(_osiris_utils_output__get_partition_device_file_last "${OUTPUT_DEVICE_FILE}")"
 		fi
 
 		if [ -n "${DEVICE_FILE}" ]; then
