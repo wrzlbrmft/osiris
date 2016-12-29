@@ -163,7 +163,7 @@ while getopts :hc:i:o:p:rs:t:y OPT; do
 			;;
 
 		y)
-			YES="1"
+			AUTO_CONFIRM_YES="1"
 			;;
 
 		:)
