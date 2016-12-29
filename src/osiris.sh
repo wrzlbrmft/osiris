@@ -19,7 +19,7 @@ Options:
   -p <phase>        Add <phase> to the phases to run.
   -r                Skip checking for root privileges.
   -s <step>         Add <step> to the steps to run; is run in all phases.
-  -t <dir>			Use <dir> as script's temp dir.
+  -t <dir>			Use <dir> as the script's temp dir.
   -y                Auto-confirm with 'YES' to start installation.
   -h                Print this help message and exit.
 
