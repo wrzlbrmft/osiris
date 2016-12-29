@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-_osiris_utils_output__get_partition_device_files_mounted() {
+_osiris_utils_output__get_mounted_partition_device_files() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -11,7 +11,7 @@ _osiris_utils_output__get_partition_device_files_mounted() {
 	fi
 }
 
-_osiris_utils_output__get_partition_device_files_mounted_count() {
+_osiris_utils_output__get_mounted_partition_device_files_count() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -19,7 +19,7 @@ _osiris_utils_output__get_partition_device_files_mounted_count() {
 	fi
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		local PARTITION_DEVICE_FILES=($(_osiris_utils_output__get_partition_device_files_mounted "${DEVICE_FILE}"))
+		local PARTITION_DEVICE_FILES=($(_osiris_utils_output__get_mounted_partition_device_files "${DEVICE_FILE}"))
 
 		printf "%s" "${#PARTITION_DEVICE_FILES[@]}"
 	fi
@@ -313,7 +313,7 @@ _osiris_utils_output__init_device() {
 		exit 1
 	fi
 
-	if [ "0" != "$(_osiris_utils_output__get_partition_device_files_mounted_count "${OUTPUT_DEVICE_FILE}")" ]; then
+	if [ "0" != "$(_osiris_utils_output__get_mounted_partition_device_files_count "${OUTPUT_DEVICE_FILE}")" ]; then
 		printf "fatal error: output device is currently mounted ('%s')\n" "${OUTPUT_DEVICE_FILE}" >&2
 		exit 1
 	fi
