@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-_osiris_utils_output__create_file_path() {
+_osiris_utils_output__create_file_dir() {
 	local FILE="$1"
 
 	if [ -n "${FILE}" ]; then
@@ -18,7 +18,7 @@ _osiris_utils_output__create_file() {
 	fi
 
 	if [ -n "${FILE}" ]; then
-		_osiris_utils_output__create_file_path "${FILE}"
+		_osiris_utils_output__create_file_dir "${FILE}"
 
 		dd if=/dev/zero of="${FILE}" bs=1M count="${SIZE}" status=progress
 	fi
