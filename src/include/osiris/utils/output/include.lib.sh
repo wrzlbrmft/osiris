@@ -1,35 +1,4 @@
 #!/usr/bin/env bash
-_osiris_utils_output__create_dir() {
-	local DIR="$1"
-
-	if [ ! -d "${DIR}" ]; then
-		mkdir -p "${DIR}"
-	fi
-}
-
-_osiris_utils_output__create_file_dir() {
-	local FILE="$1"
-
-	if [ -n "${FILE}" ]; then
-		_osiris_utils_output__create_dir "$(dirname "${FILE}")"
-	fi
-}
-
-_osiris_utils_output__create_file() {
-	local FILE="$1"
-	local SIZE="$2"
-
-	if [ -z "${SIZE}" ]; then
-		SIZE="1"
-	fi
-
-	if [ -n "${FILE}" ]; then
-		_osiris_utils_output__create_file_dir "${FILE}"
-
-		dd if=/dev/zero of="${FILE}" bs=1M count="${SIZE}" status=progress
-	fi
-}
-
 _osiris_utils_output__create_image_file() {
 	local IMAGE_FILE="$1"
 	local IMAGE_SIZE="$2"
@@ -43,7 +12,7 @@ _osiris_utils_output__create_image_file() {
 	fi
 
 	if [ -n "${IMAGE_FILE}" ] && [ -n "${IMAGE_SIZE}" ]; then
-		_osiris_utils_output__create_file "${IMAGE_FILE}" "${IMAGE_SIZE}"
+		_osiris_utils_fs__create_file "${IMAGE_FILE}" "${IMAGE_SIZE}"
 	fi
 }
 
@@ -153,7 +122,7 @@ _osiris_utils_output__delete_partition_table() {
 	fi
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		_osiris_utils_output__create_file "${DEVICE_FILE}"
+		_osiris_utils_fs__create_file "${DEVICE_FILE}"
 	fi
 }
 
@@ -200,7 +169,7 @@ _osiris_utils_output__delete_partition() {
 	local DEVICE_FILE="$1"
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		_osiris_utils_output__create_file "${DEVICE_FILE}"
+		_osiris_utils_fs__create_file "${DEVICE_FILE}"
 	fi
 }
 
