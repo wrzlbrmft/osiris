@@ -19,13 +19,14 @@ Options:
   -p <phase>        Add <phase> to the phases to run.
   -r                Skip checking for root privileges.
   -s <step>         Add <step> to the steps to run; is run in all phases.
+  -t <dir>			Use <dir> as script's temp dir.
   -y                Auto-confirm with 'YES' to start installation.
   -h                Print this help message and exit.
 
 Options starting with -c, -i, -p or -s can be used multiple times. They are
  processed in their given order.
 
-If existing, then the 'include' directories in the current and the script
+If existing, then the 'include' directories in the current and the script's
  directory are automatically added last to the include paths to search.
 
 If no phase is specified using -p, then the following phases are run:
@@ -111,7 +112,7 @@ declare -a CONFIG_FILES
 declare -a PHASES
 declare -a STEPS
 
-while getopts :hc:i:o:p:rs:y OPT; do
+while getopts :hc:i:o:p:rs:t:y OPT; do
 	case "${OPT}" in
 		h)
 			__help
@@ -156,6 +157,11 @@ while getopts :hc:i:o:p:rs:y OPT; do
 			STEPS+=("${STEP}")
 			;;
 
+		t)
+			SCRIPT_TEMP_DIR="${OPTARG}"
+			KEEP_SCRIPT_TEMP_DIR="1"
+			;;
+
 		y)
 			YES="1"
 			;;
@@ -181,6 +187,10 @@ while getopts :hc:i:o:p:rs:y OPT; do
 
 				s)
 					printf "missing step" >&2
+					;;
+
+				t)
+					printf "missing temp dir" >&2
 					;;
 			esac
 			printf "\n" >&2
