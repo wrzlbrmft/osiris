@@ -5,4 +5,8 @@ _osiris_internal_temp_inittemp_main() {
 	else
 		__create_dir "${SCRIPT_TEMP_DIR}"
 	fi
+
+	TEMP_DIR="${SCRIPT_TEMP_DIR}/tmp"
+
+	__create_dir "${TEMP_DIR}"
 }
