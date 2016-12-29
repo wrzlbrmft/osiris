@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
+_osiris_utils_output__create_dir() {
+	local DIR="$1"
+
+	if [ ! -d "${DIR}" ]; then
+		mkdir -p "${DIR}"
+	fi
+}
+
 _osiris_utils_output__create_file_dir() {
 	local FILE="$1"
 
 	if [ -n "${FILE}" ]; then
-		if [ ! -d "$(dirname "${FILE}")" ]; then
-			mkdir -p "$(dirname "${FILE}")"
-		fi
+		_osiris_utils_output__create_dir "$(dirname "${FILE}")"
 	fi
 }
 
