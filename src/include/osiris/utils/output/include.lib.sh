@@ -33,7 +33,7 @@ __init_output_device() {
 		exit 1
 	fi
 
-	__delete_partitions "${OUTPUT_DEVICE_FILE}"
+	__delete_all_partitions "${OUTPUT_DEVICE_FILE}"
 	__delete_partition_table "${OUTPUT_DEVICE_FILE}"
 
 	OUTPUT_TYPE="device"

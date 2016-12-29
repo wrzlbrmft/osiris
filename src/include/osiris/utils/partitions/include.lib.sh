@@ -156,7 +156,7 @@ __delete_partition() {
 	fi
 }
 
-__delete_partitions() {
+__delete_all_partitions() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
