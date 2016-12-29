@@ -25,7 +25,7 @@ Options:
 Options starting with -c, -i, -p or -s can be used multiple times. They are
  processed in their given order.
 
-If existing, then the directories 'include' in the current and the script
+If existing, then the 'include' directories in the current and the script
  directory are automatically added last to the include paths to search.
 
 If no phase is specified using -p, then the following phases are run:
