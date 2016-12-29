@@ -307,7 +307,7 @@ _osiris_utils_output__create_filesystem() {
 	fi
 }
 
-_osiris_utils_output__init_device() {
+_osiris_utils_output__init_output_device() {
 	OUTPUT_DEVICE_FILE="$1"
 
 	if [ -z "${OUTPUT_DEVICE_FILE}" ]; then
@@ -330,7 +330,7 @@ _osiris_utils_output__init_device() {
 	OUTPUT_TYPE="device"
 }
 
-_osiris_utils_output__init_image() {
+_osiris_utils_output__init_output_image() {
 	OUTPUT_IMAGE_FILE="$1"
 	local IMAGE_SIZE="$2"
 
@@ -365,14 +365,14 @@ _osiris_utils_output__init_image() {
 	OUTPUT_TYPE="image"
 }
 
-_osiris_utils_output__done_device() {
+_osiris_utils_output__done_output_device() {
 	if [ -z "${OUTPUT_DEVICE_FILE}" ]; then
 		printf "fatal error: no output device file\n" >&2
 		exit 1
 	fi
 }
 
-_osiris_utils_output__done_image() {
+_osiris_utils_output__done_output_image() {
 	if [ -z "${OUTPUT_IMAGE_FILE}" ]; then
 		printf "fatal error: no output image file\n" >&2
 		exit 1
