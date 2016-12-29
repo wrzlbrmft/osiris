@@ -17,7 +17,7 @@ Options:
   -i <directory>    Add <directory> to the include paths to search.
   -o <file>         Install to <file>; either a device or an image file.
   -p <phase>        Add <phase> to the phases to run.
-  -r                Do not check for root privileges.
+  -r                Skip checking for root privileges.
   -s <step>         Add <step> to the steps to run; is run in all phases.
   -y                Auto-confirm with 'YES' to start installation.
   -h                Print this help message and exit.
@@ -148,7 +148,7 @@ while getopts :hc:i:o:p:rs:y OPT; do
 			;;
 
 		r)
-			NO_ROOT_CHECK="1"
+			SKIP_ROOT_CHECK="1"
 			;;
 
 		s)
@@ -201,7 +201,7 @@ if [ -z "$*" ]; then
 	exit 1
 fi
 
-if [ -z "${NO_ROOT_CHECK}" ] && [ "root" != "${USER}" ]; then
+if [ -z "${SKIP_ROOT_CHECK}" ] && [ "root" != "${USER}" ]; then
 	printf "fatal error: no root privileges ('%s')\n" "${USER}" >&2
 	exit 1
 fi
