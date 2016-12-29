@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-_osiris_utils_output__create_image_file() {
+__create_image_file() {
 	local IMAGE_FILE="$1"
 	local IMAGE_SIZE="$2"
 
@@ -12,11 +12,11 @@ _osiris_utils_output__create_image_file() {
 	fi
 
 	if [ -n "${IMAGE_FILE}" ] && [ -n "${IMAGE_SIZE}" ]; then
-		_osiris_utils_fs__create_file "${IMAGE_FILE}" "${IMAGE_SIZE}"
+		__create_file "${IMAGE_FILE}" "${IMAGE_SIZE}"
 	fi
 }
 
-_osiris_utils_output__get_partition_device_files() {
+__get_partition_device_files() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -28,7 +28,7 @@ _osiris_utils_output__get_partition_device_files() {
 	fi
 }
 
-_osiris_utils_output__get_partition_device_files_count() {
+__get_partition_device_files_count() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -36,13 +36,13 @@ _osiris_utils_output__get_partition_device_files_count() {
 	fi
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		local PARTITION_DEVICE_FILES=($(_osiris_utils_output__get_partition_device_files "${DEVICE_FILE}"))
+		local PARTITION_DEVICE_FILES=($(__get_partition_device_files "${DEVICE_FILE}"))
 
 		printf "%s" "${#PARTITION_DEVICE_FILES[@]}"
 	fi
 }
 
-_osiris_utils_output__get_partition_device_file() {
+__get_partition_device_file() {
 	local PARTITION_NUM="$1"
 	local DEVICE_FILE="$2"
 
@@ -52,14 +52,14 @@ _osiris_utils_output__get_partition_device_file() {
 		fi
 
 		if [ -n "${DEVICE_FILE}" ]; then
-			local PARTITION_DEVICE_FILES=($(_osiris_utils_output__get_partition_device_files "${DEVICE_FILE}"))
+			local PARTITION_DEVICE_FILES=($(__get_partition_device_files "${DEVICE_FILE}"))
 
 			printf "%s" "${PARTITION_DEVICE_FILES["$((PARTITION_NUM-1))"]}"
 		fi
 	fi
 }
 
-_osiris_utils_output__get_partition_device_file_last() {
+__get_partition_device_file_last() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -67,11 +67,11 @@ _osiris_utils_output__get_partition_device_file_last() {
 	fi
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		printf "%s" "$(_osiris_utils_output__get_partition_device_file 0 "${DEVICE_FILE}")"
+		printf "%s" "$(__get_partition_device_file 0 "${DEVICE_FILE}")"
 	fi
 }
 
-_osiris_utils_output__get_mounted_partition_device_files() {
+__get_mounted_partition_device_files() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -83,7 +83,7 @@ _osiris_utils_output__get_mounted_partition_device_files() {
 	fi
 }
 
-_osiris_utils_output__get_mounted_partition_device_files_count() {
+__get_mounted_partition_device_files_count() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -91,13 +91,13 @@ _osiris_utils_output__get_mounted_partition_device_files_count() {
 	fi
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		local PARTITION_DEVICE_FILES=($(_osiris_utils_output__get_mounted_partition_device_files "${DEVICE_FILE}"))
+		local PARTITION_DEVICE_FILES=($(__get_mounted_partition_device_files "${DEVICE_FILE}"))
 
 		printf "%s" "${#PARTITION_DEVICE_FILES[@]}"
 	fi
 }
 
-_osiris_utils_output__create_partition_table() {
+__create_partition_table() {
 	local PARTITION_TABLE_TYPE="$1"
 	local DEVICE_FILE="$2"
 
@@ -114,7 +114,7 @@ _osiris_utils_output__create_partition_table() {
 	fi
 }
 
-_osiris_utils_output__delete_partition_table() {
+__delete_partition_table() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -122,11 +122,11 @@ _osiris_utils_output__delete_partition_table() {
 	fi
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		_osiris_utils_fs__create_file "${DEVICE_FILE}"
+		__create_file "${DEVICE_FILE}"
 	fi
 }
 
-_osiris_utils_output__create_partition() {
+__create_partition() {
 	local PARTITION_TYPE="$1"
 	local PARTITION_SIZE="$2"
 	local PARTITION_UNIT="$3"
@@ -165,15 +165,15 @@ _osiris_utils_output__create_partition() {
 	fi
 }
 
-_osiris_utils_output__delete_partition() {
+__delete_partition() {
 	local DEVICE_FILE="$1"
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		_osiris_utils_fs__create_file "${DEVICE_FILE}"
+		__create_file "${DEVICE_FILE}"
 	fi
 }
 
-_osiris_utils_output__delete_partitions() {
+__delete_partitions() {
 	local DEVICE_FILE="$1"
 
 	if [ -z "${DEVICE_FILE}" ]; then
@@ -181,15 +181,15 @@ _osiris_utils_output__delete_partitions() {
 	fi
 
 	if [ -n "${DEVICE_FILE}" ]; then
-		for PARTITION_DEVICE_FILE in $(_osiris_utils_output__get_partition_device_files "${DEVICE_FILE}" | sort -r); do
-			_osiris_utils_output__delete_partition "${PARTITION_DEVICE_FILE}"
+		for PARTITION_DEVICE_FILE in $(__get_partition_device_files "${DEVICE_FILE}" | sort -r); do
+			__delete_partition "${PARTITION_DEVICE_FILE}"
 		done
 
 		partprobe
 	fi
 }
 
-_osiris_utils_output__update_partition_flag() {
+__update_partition_flag() {
 	local STATE="$1"
 	local PARTITION_FLAG="$2"
 	local PARTITION_NUM="$3"
@@ -202,7 +202,7 @@ _osiris_utils_output__update_partition_flag() {
 
 		if [ -n "${DEVICE_FILE}" ]; then
 			if [ -z "${PARTITION_NUM}" ]; then
-				PARTITION_NUM="$(_osiris_utils_output__get_partition_device_files_count "${DEVICE_FILE}")"
+				PARTITION_NUM="$(__get_partition_device_files_count "${DEVICE_FILE}")"
 			fi
 
 			case "${STATE}" in
@@ -220,30 +220,30 @@ _osiris_utils_output__update_partition_flag() {
 	fi
 }
 
-_osiris_utils_output__set_partition_flag() {
+__set_partition_flag() {
 	local PARTITION_FLAG="$1"
 	local PARTITION_NUM="$2"
 	local DEVICE_FILE="$3"
 
-	_osiris_utils_output__update_partition_flag set "${PARTITION_FLAG}" "${PARTITION_NUM}" "${DEVICE_FILE}"
+	__update_partition_flag set "${PARTITION_FLAG}" "${PARTITION_NUM}" "${DEVICE_FILE}"
 }
 
-_osiris_utils_output__clear_partition_flag() {
+__clear_partition_flag() {
 	local PARTITION_FLAG="$1"
 	local PARTITION_NUM="$2"
 	local DEVICE_FILE="$3"
 
-	_osiris_utils_output__update_partition_flag clear "${PARTITION_FLAG}" "${PARTITION_NUM}" "${DEVICE_FILE}"
+	__update_partition_flag clear "${PARTITION_FLAG}" "${PARTITION_NUM}" "${DEVICE_FILE}"
 }
 
-_osiris_utils_output__create_filesystem() {
+__create_filesystem() {
 	local FILESYSTEM_TYPE="$1"
 	local FILESYSTEM_LABEL="$2"
 	local DEVICE_FILE="$3"
 
 	if [ -n "${FILESYSTEM_TYPE}" ]; then
 		if [ -z "${DEVICE_FILE}" ]; then
-			DEVICE_FILE="$(_osiris_utils_output__get_partition_device_file_last "${OUTPUT_DEVICE_FILE}")"
+			DEVICE_FILE="$(__get_partition_device_file_last "${OUTPUT_DEVICE_FILE}")"
 		fi
 
 		if [ -n "${DEVICE_FILE}" ]; then
@@ -276,7 +276,7 @@ _osiris_utils_output__create_filesystem() {
 	fi
 }
 
-_osiris_utils_output__init_output_device() {
+__init_output_device() {
 	OUTPUT_DEVICE_FILE="$1"
 
 	if [ -z "${OUTPUT_DEVICE_FILE}" ]; then
@@ -288,18 +288,18 @@ _osiris_utils_output__init_output_device() {
 		exit 1
 	fi
 
-	if [ "0" != "$(_osiris_utils_output__get_mounted_partition_device_files_count "${OUTPUT_DEVICE_FILE}")" ]; then
+	if [ "0" != "$(__get_mounted_partition_device_files_count "${OUTPUT_DEVICE_FILE}")" ]; then
 		printf "fatal error: output device is currently mounted ('%s')\n" "${OUTPUT_DEVICE_FILE}" >&2
 		exit 1
 	fi
 
-	_osiris_utils_output__delete_partitions "${OUTPUT_DEVICE_FILE}"
-	_osiris_utils_output__delete_partition_table "${OUTPUT_DEVICE_FILE}"
+	__delete_partitions "${OUTPUT_DEVICE_FILE}"
+	__delete_partition_table "${OUTPUT_DEVICE_FILE}"
 
 	OUTPUT_TYPE="device"
 }
 
-_osiris_utils_output__init_output_image() {
+__init_output_image() {
 	OUTPUT_IMAGE_FILE="$1"
 	local IMAGE_SIZE="$2"
 
@@ -326,7 +326,7 @@ _osiris_utils_output__init_output_image() {
 		exit 1
 	fi
 
-	_osiris_utils_output__create_image_file "${OUTPUT_IMAGE_FILE}" "${OUTPUT_IMAGE_SIZE}"
+	__create_image_file "${OUTPUT_IMAGE_FILE}" "${OUTPUT_IMAGE_SIZE}"
 
 	OUTPUT_DEVICE_FILE="$(losetup -f)"
 	losetup -P "${OUTPUT_DEVICE_FILE}" "${OUTPUT_IMAGE_FILE}"
@@ -334,14 +334,14 @@ _osiris_utils_output__init_output_image() {
 	OUTPUT_TYPE="image"
 }
 
-_osiris_utils_output__done_output_device() {
+__done_output_device() {
 	if [ -z "${OUTPUT_DEVICE_FILE}" ]; then
 		printf "fatal error: no output device file\n" >&2
 		exit 1
 	fi
 }
 
-_osiris_utils_output__done_output_image() {
+__done_output_image() {
 	if [ -z "${OUTPUT_IMAGE_FILE}" ]; then
 		printf "fatal error: no output image file\n" >&2
 		exit 1
