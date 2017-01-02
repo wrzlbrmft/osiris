@@ -3,8 +3,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT_FILE="${SCRIPT_DIR}/$(basename "${BASH_SOURCE[0]}")"
 SCRIPT_NAME="$(SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"; printf "%s" "${SCRIPT_NAME%.*}")"
 
+declare INCLUDE_DIR
 declare -A INCLUDE_DIRS
+declare INCLUDE_PATH
 declare -a INCLUDE_PATHS
+declare INCLUDE
 declare -a INCLUDES
 
 __help() {
@@ -58,6 +61,7 @@ __include() {
 	if [ -z "${INCLUDE_DIRS["${INCLUDE}"]}" ]; then
 		local INCLUDE_DIR
 
+		local INCLUDE_PATH
 		for INCLUDE_PATH in "${INCLUDE_PATHS[@]}"; do
 			if [ -d "${INCLUDE_PATH}/${INCLUDE}" ]; then
 				INCLUDE_DIR="${INCLUDE_PATH}/${INCLUDE}"
@@ -91,6 +95,7 @@ __run() {
 	local PHASE_FILE
 	local FUNCTION
 
+	local INCLUDE
 	for INCLUDE in "${INCLUDES[@]}"; do
 		INCLUDE_DIR="${INCLUDE_DIRS["${INCLUDE}"]}"
 		PHASE_FILE="${INCLUDE_DIR}/${PHASE}.sh"
@@ -108,8 +113,11 @@ __run() {
 
 # main
 
+declare CONFIG_FILE
 declare -a CONFIG_FILES
+declare PHASE
 declare -a PHASES
+declare STEP
 declare -a STEPS
 
 while getopts :hc:i:o:p:rs:t:y OPT; do
