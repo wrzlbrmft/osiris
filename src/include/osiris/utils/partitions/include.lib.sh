@@ -120,24 +120,24 @@ __create_partition() {
 			DEVICE_FILE="${OUTPUT_DEVICE_FILE}"
 		fi
 
-		if [ -n "${DEVICE_FILE}" ] && [ "-1" != "${OUTPUT_PARTITION_START}" ]; then
+		if [ -n "${DEVICE_FILE}" ] && [ "-1" != "${PARTITION_START}" ]; then
 			if [ -n "${UNIT}" ]; then
-				OUTPUT_PARTITION_UNIT="${UNIT}"
+				PARTITION_UNIT="${UNIT}"
 			fi
 
-			local START="${OUTPUT_PARTITION_START}${OUTPUT_PARTITION_UNIT}"
+			local START="${PARTITION_START}${PARTITION_UNIT}"
 			local END
 
 			if [ -n "${SIZE}" ]; then
-				if [ "1" == "${OUTPUT_PARTITION_START}" ]; then
-					OUTPUT_PARTITION_START="${SIZE}"
+				if [ "1" == "${PARTITION_START}" ]; then
+					PARTITION_START="${SIZE}"
 				else
-					OUTPUT_PARTITION_START="$((OUTPUT_PARTITION_START+SIZE))"
+					PARTITION_START="$((PARTITION_START+SIZE))"
 				fi
 
-				END="${OUTPUT_PARTITION_START}${OUTPUT_PARTITION_UNIT}"
+				END="${PARTITION_START}${PARTITION_UNIT}"
 			else
-				OUTPUT_PARTITION_START="-1"
+				PARTITION_START="-1"
 
 				END="100%"
 			fi
