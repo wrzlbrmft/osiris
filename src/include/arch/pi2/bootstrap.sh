@@ -9,6 +9,6 @@ _arch_pi2_bootstrap_main() {
 	__create_partition ext4
 		__create_filesystem ext4 root
 
-	__mount root "$(__get_partition_device_file 2)" "${SCRIPT_TEMP_DIR}/mnt"
-	__mount boot "$(__get_partition_device_file 1)" /boot
+	__mount root "${SCRIPT_TEMP_DIR}/mnt"
+	__mount boot /boot
 }
