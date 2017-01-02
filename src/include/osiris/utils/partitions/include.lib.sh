@@ -125,7 +125,8 @@ __create_partition() {
 				OUTPUT_PARTITION_UNIT="${UNIT}"
 			fi
 
-			local PARTITION_START="${OUTPUT_PARTITION_START}${OUTPUT_PARTITION_UNIT}"
+			local START="${OUTPUT_PARTITION_START}${OUTPUT_PARTITION_UNIT}"
+			local END
 
 			if [ -n "${SIZE}" ]; then
 				if [ "1" == "${OUTPUT_PARTITION_START}" ]; then
@@ -134,14 +135,14 @@ __create_partition() {
 					OUTPUT_PARTITION_START="$((OUTPUT_PARTITION_START+SIZE))"
 				fi
 
-				local PARTITION_END="${OUTPUT_PARTITION_START}${OUTPUT_PARTITION_UNIT}"
+				END="${OUTPUT_PARTITION_START}${OUTPUT_PARTITION_UNIT}"
 			else
 				OUTPUT_PARTITION_START="-1"
 
-				local PARTITION_END="100%"
+				END="100%"
 			fi
 
-			parted -a optimal "${DEVICE_FILE}" mkpart primary "${TYPE}" "${PARTITION_START}" "${PARTITION_END}"
+			parted -a optimal "${DEVICE_FILE}" mkpart primary "${TYPE}" "${START}" "${END}"
 
 			partprobe
 		fi
