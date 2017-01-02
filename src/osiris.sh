@@ -120,6 +120,12 @@ declare -a PHASES
 declare STEP
 declare -a STEPS
 
+declare OUTPUT_FILE
+declare SKIP_ROOT_CHECK
+declare SCRIPT_TEMP_DIR
+declare KEEP_SCRIPT_TEMP_DIR
+declare AUTO_CONFIRM_YES
+
 while getopts :hc:i:o:p:rs:t:y OPT; do
 	case "${OPT}" in
 		h)
